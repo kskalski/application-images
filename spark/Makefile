@@ -3,6 +3,7 @@ push: push-spark push-zeppelin
 .PHONY: push push-spark push-zeppelin spark zeppelin zeppelin-build
 
 ROOT_NAME = gcr.io/google_containers
+AUX_PUSH_TOOL = gcloud
 
 # To bump the Spark version, bump the spark_ver in Dockerfile, bump
 # this tag and reset to v1. You should also double check the native
@@ -29,12 +30,12 @@ zeppelin:
 	docker tag -f $(ROOT_NAME)/zeppelin $(ROOT_NAME)/zeppelin:$(ZEPPELIN_TAG)
 
 push-spark: spark
-	gcloud docker push $(ROOT_MAME)/spark
-	gcloud docker push $(ROOT_NAME)/spark:$(TAG)
+	$(AUX_PUSH_TOOL) docker push $(ROOT_NAME)/spark
+	$(AUX_PUSH_TOOL) docker push $(ROOT_NAME)/spark:$(TAG)
 
 push-zeppelin: zeppelin
-	gcloud docker push $(ROOT_NAME)/zeppelin
-	gcloud docker push $(ROOT_NAME)/zeppelin:$(ZEPPELIN_TAG)
+	$(AUX_PUSH_TOOL) docker push $(ROOT_NAME)/zeppelin
+	$(AUX_PUSH_TOOL) docker push $(ROOT_NAME)/zeppelin:$(ZEPPELIN_TAG)
 
 clean:
 	docker rmi $(ROOT_NAME)/spark:$(TAG) || :
